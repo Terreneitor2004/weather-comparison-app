@@ -59,4 +59,29 @@ form.addEventListener("submit", async (event) => {
   const ctx = document.getElementById("weatherChart").getContext("2d");
   if (weatherChart) {
     weatherChart.destroy();
-  }});
+  }
+
+  weatherChart = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: cityNames,
+      datasets: [
+        {
+          label: "Temperature (°C)",
+          data: temperatures,
+          backgroundColor: "rgba(54, 162, 100, 0.5)",
+          borderColor: "rgba(54, 162, 235, 1)",
+          borderWidth: 1,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: false,
+        },
+      },
+    },
+  });
+});
