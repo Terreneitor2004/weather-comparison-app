@@ -1,11 +1,13 @@
 const form = document.getElementById("weatherForm");
 const resultDiv = document.getElementById("weatherResult");
 
+let weatherChart;
+
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   const cities = document.getElementById("cityInput").value.trim();
-  resultDiv.innerHTML = "";
+  resultDiv.innerHTML = ""; // Limpiar resultados previos
 
   if (!cities) {
     resultDiv.innerHTML =
@@ -15,6 +17,9 @@ form.addEventListener("submit", async (event) => {
 
   const apiKey = "d49f768bd5ea4f249972455f214cadfe";
   const cityList = cities.split(",").map((city) => city.trim());
+
+  const temperatures = [];
+  const cityNames = [];
 
   for (const city of cityList) {
     try {
@@ -27,6 +32,8 @@ form.addEventListener("submit", async (event) => {
       }
 
       const data = await response.json();
+      cityNames.push(data.name);
+      temperatures.push(data.main.temp);
 
       resultDiv.innerHTML += `
         <div class="card result-card p-3 mt-3">
@@ -42,4 +49,14 @@ form.addEventListener("submit", async (event) => {
       resultDiv.innerHTML += `<div class="alert alert-danger">${error.message}</div>`;
     }
   }
-});
+
+  if (cityNames.length === 0) return;
+
+  const chartContainer = document.createElement("div");
+  chartContainer.classList.add("mt-4");
+  chartContainer.innerHTML = '<canvas id="weatherChart"></canvas>';
+  resultDiv.appendChild(chartContainer);
+  const ctx = document.getElementById("weatherChart").getContext("2d");
+  if (weatherChart) {
+    weatherChart.destroy();
+  }});
